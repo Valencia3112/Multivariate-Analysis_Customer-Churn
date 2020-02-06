@@ -5,8 +5,10 @@ Analysis of Customer Churn for Teleco Company
 ### Descriptive Analysis of Telecom Customer Churn.
 
 ## Questions we are trying to address:
-*
-*
+* Will longer tenure lead to more/less customers being churned?
+* How is the churn affected by seniority?
+* Based on the contract type the customers are into,how could it be more/less easier for customers to stay/leave the company?
+* How are monthly and total charges related?
 
 
 ## Team Members:
