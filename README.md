@@ -4,6 +4,11 @@ Analysis of Customer Churn for Teleco Company
 ## Problem Statement:  
 ### Descriptive Analysis of Telecom Customer Churn.
 
+## Questions we are trying to address:
+*
+*
+
+
 ## Team Members:
 Name|Email Id
 ----|-------
