@@ -2,10 +2,10 @@
 Analysis of Customer Churn for Teleco Company
 
 ## Problem Statement:  
-### Descriptive Analysis of Telecom Customer Churn
+### Descriptive Analysis of Telecom Customer Churn.
 
 ## Team Members:
-Name|EmailId
+Name|Email Id
 ----|-------
 Valencia Dias|valenciawalter.dias@rutgers.edu
 Rishi Khimani|rishi.khimani@rutgers.edu
