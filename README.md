@@ -1,8 +1,12 @@
-# Multivariate-Analysis_Customer-Churn
+## Multivariate-Analysis_Customer-Churn
 Analysis of Customer Churn for Teleco Company
 
 ## Problem Statement:  Descriptive Analysis of Telecom Customer Churn
-## Data Dictionary
+## Team Members:
+Name|EmailId
+-------------|-----------|-----------
+
+## Data Dictionary:
 Variable Name|Description|Datatype
 -------------|-----------|-----------
 customerID|Customer ID|object
