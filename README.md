@@ -1,7 +1,8 @@
 ## Multivariate-Analysis_Customer-Churn
 Analysis of Customer Churn for Teleco Company
 
-## Problem Statement:  Descriptive Analysis of Telecom Customer Churn
+## Problem Statement:  
+### Descriptive Analysis of Telecom Customer Churn
 
 ## Team Members:
 Name|EmailId
@@ -34,4 +35,8 @@ PaymentMethod|The customer’s payment method (Electronic check, Mailed check, B
 MonthlyCharges|The amount charged to the customer monthly|float64
 TotalCharges|The total amount charged to the customer|object
 Churn|Whether the customer churned or not (Yes or No)|object
+
+
+
+
 
