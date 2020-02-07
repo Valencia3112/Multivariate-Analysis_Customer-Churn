@@ -5,18 +5,18 @@ Analysis of Customer Churn for Teleco Company
 ### Descriptive Analysis of Telecom Customer Churn.
 
 ## Questions we are trying to address:
-* Will longer tenure lead to more/less customers being churned?
-* How is the churn affected by seniority?
-* Based on the contract type the customers are into,how could it be more/less easier for customers to stay/leave the company?
+* What are the major factors affecting customer churn?
+* Based on the factors such as contract type,tenure how could it be more/less easier for customers to stay/leave the company?
 * How are monthly and total charges related?
+* How to predict customer churn and what is the best fit model?
 
 
 ## Team Members:
-Name|Email Id
-----|-------
-Valencia Dias|valenciawalter.dias@rutgers.edu
-Rishi Khimani|rishi.khimani@rutgers.edu
-Vinit Wani|vinit.wani@rutgers.edu
+Name|Email Id|Github URL
+----|-------|-------------
+Valencia Dias|valenciawalter.dias@rutgers.edu|https://github.com/Valencia3112/
+Rishi Khimani|rishi.khimani@rutgers.edu|https://github.com/rishikhimani/
+Vinit Wani|vinit.wani@rutgers.edu|https://github.com/equitharn/
 
 ## Data Dictionary:
 Variable Name|Description|Datatype
