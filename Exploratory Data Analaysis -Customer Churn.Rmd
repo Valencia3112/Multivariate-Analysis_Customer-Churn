@@ -1,0 +1,202 @@
+---
+title: "Analysis of Teleco Customer Churn"
+author: "Valencia Dias"
+date: "20/02/2020"
+output:
+  html_document:
+    df_print: paged
+  word_document: default
+---
+
+
+```{r}
+library(readr)
+custc <- read.csv("C:/Users/admin/Desktop/MVA/PROJECT/TelEco_Customer_Churn.csv")
+summary(custc)
+dim(custc)
+str(custc)
+```
+
+```{r}
+#Finding the missing values in each column
+sapply(custc, function(x) sum(is.na(x)))
+#Dropping all the rows with the missing values 
+custc <- custc[complete.cases(custc),]  
+sapply(custc, function(x) sum(is.na(x)))
+dim(custc)
+```
+
+Comments:We have used "sapply" to check if there are  missing values in each columns. We found that there are 11 missing values in “TotalCharges” columns.We have further removed all those rows with missing values.
+
+```{r}
+#Factoring the Churn Variable and changing the value of No to 0 and Yes to 1
+library(magrittr) 
+library(dplyr) 
+library(tidyr)
+custc$Churn <- factor(ifelse(custc$Churn == 'No', 0, 1))
+cus <- custc %>% group_by(Churn)%>%
+  summarise(Count = length(Churn)) %>%
+  mutate(Rate = Count / sum(Count)*100.0)
+cus
+```
+
+
+
+```{r}
+#Churners Rate
+library(plyr)
+library(ggplot2)
+ggplot(cus, aes(x = '', y = Rate, fill = Churn)) +
+  geom_bar(width = 1, size = 1, color = 'black', stat = 'identity') +
+  coord_polar('y') +
+  geom_text(aes(label = paste0(round(Rate), '%')),
+            position = position_stack(vjust = 0.5)) +
+  scale_fill_manual(values=c("#999999", "#E69F00"))+
+  labs(title = 'Churners Rate') +
+  theme_classic() +
+  theme(axis.line = element_blank(),axis.title.x = element_blank(),axis.title.y = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank())
+
+```
+
+Comments:In our dataset, close to 30% customers churned, while the rest remained with the service provider.
+
+
+```{r}
+custc$MonthlyChargesBin <- NA
+custc$MonthlyChargesBin[custc$MonthlyCharges > 0 & custc$MonthlyCharges <= 10] <- '10'
+custc$MonthlyChargesBin[custc$MonthlyCharges > 10 & custc$MonthlyCharges <= 20] <- '20'
+custc$MonthlyChargesBin[custc$MonthlyCharges > 20 & custc$MonthlyCharges <= 30] <- '30'
+custc$MonthlyChargesBin[custc$MonthlyCharges > 30 & custc$MonthlyCharges <= 40] <- '40'
+custc$MonthlyChargesBin[custc$MonthlyCharges > 40 & custc$MonthlyCharges <= 50] <- '50'
+custc$MonthlyChargesBin[custc$MonthlyCharges > 50 & custc$MonthlyCharges <= 60] <- '60'
+custc$MonthlyChargesBin[custc$MonthlyCharges > 60 & custc$MonthlyCharges <= 70] <- '70'
+custc$MonthlyChargesBin[custc$MonthlyCharges > 70 & custc$MonthlyCharges <= 80] <- '80'
+custc$MonthlyChargesBin[custc$MonthlyCharges > 80 & custc$MonthlyCharges <= 90] <- '90'
+custc$MonthlyChargesBin[custc$MonthlyCharges > 90 & custc$MonthlyCharges <= 100] <- '100'
+custc$MonthlyChargesBin[custc$MonthlyCharges > 100 & custc$MonthlyCharges <= 110] <- '110'
+custc$MonthlyChargesBin[custc$MonthlyCharges > 110 & custc$MonthlyCharges <= 120] <- '120'
+
+custc$MonthlyChargesBin <- factor(custc$MonthlyChargesBin, 
+                                      levels = c('10', '20', '30', '40', '50', '60', '70', '80', '90','100','110','120'))
+
+
+
+```
+
+```{r}
+cols_recode1 <- c(10:15)
+for (i in 1:ncol(custc[, cols_recode1])) {
+  custc[, cols_recode1][, i] <- as.factor(mapvalues(custc[, cols_recode1][, i], from = c("No internet service"), to = c("No")))
+}
+
+custc$MultipleLines <- as.factor(mapvalues(custc$MultipleLines, from = c("No phone service"), to = c("No")))
+
+str(custc)
+
+
+```
+Comments:We have changed ‘No internet service’ to ‘No’ for six columns, they are: ‘OnlineSecurity’, ‘OnlineBackup’, ‘DeviceProtection’, ‘TechSupport’, ‘streamingTV, ’streamingMovies’.
+
+```{r}
+#Bar plots of categorical variables
+b1 <- ggplot(custc, aes(gender,fill=Churn)) + geom_bar(position='fill') +scale_fill_manual(values=c("#999999", "#E69F00"))
+#+theme(legend.position="none")
+b1
+b2 <- ggplot(custc, aes(SeniorCitizen, fill = Churn)) + geom_bar(position='fill')+scale_fill_manual(values=c("#999999", "#E69F00"))
+b2
+b3 <- ggplot(custc, aes(Partner, fill = Churn)) + geom_bar(position='fill')+scale_fill_manual(values=c("#999999", "#E69F00"))
+b3
+b4 <- ggplot(custc, aes(Dependents, fill = Churn)) + geom_bar(position='fill')+scale_fill_manual(values=c("#999999", "#E69F00"))
+b4
+b5 <- ggplot(custc, aes(PhoneService, fill = Churn)) + geom_bar(position='fill')+scale_fill_manual(values=c("#999999", "#E69F00"))
+b5
+b6 <- ggplot(custc, aes(MultipleLines, fill = Churn)) + geom_bar(position='fill')+scale_fill_manual(values=c("#999999", "#E69F00"))
+b6
+b7 <- ggplot(custc, aes(InternetService, fill = Churn)) + geom_bar(position='fill')+scale_fill_manual(values=c("#999999", "#E69F00"))
+b7
+b8 <- ggplot(custc, aes(OnlineSecurity, fill = Churn)) + geom_bar(position='fill')+scale_fill_manual(values=c("#999999", "#E69F00"))
+b8
+b9 <- ggplot(custc, aes(OnlineBackup, fill = Churn)) + geom_bar(position='fill')+scale_fill_manual(values=c("#999999", "#E69F00"))
+b9
+b10 <- ggplot(custc, aes(DeviceProtection, fill = Churn)) + geom_bar(position='fill')+scale_fill_manual(values=c("#999999", "#E69F00"))
+b10
+b11 <- ggplot(custc, aes(TechSupport, fill = Churn)) + geom_bar(position='fill')+scale_fill_manual(values=c("#999999", "#E69F00"))
+b11
+b12 <- ggplot(custc, aes(StreamingTV, fill = Churn)) + geom_bar(position='fill')+scale_fill_manual(values=c("#999999", "#E69F00"))
+b12
+b13 <- ggplot(custc, aes(StreamingMovies, fill = Churn)) + geom_bar(position='fill')+scale_fill_manual(values=c("#999999", "#E69F00"))
+b13
+b14 <- ggplot(custc, aes(Contract, fill = Churn)) + geom_bar(position='fill')+scale_fill_manual(values=c("#999999", "#E69F00"))
+b14
+b15 <- ggplot(custc, aes(PaperlessBilling, fill = Churn)) + geom_bar(position='fill')+scale_fill_manual(values=c("#999999", "#E69F00"))
+b15
+b16 <- ggplot(custc, aes(PaymentMethod, fill = Churn)) + geom_bar(position='fill')+scale_fill_manual(values=c("#999999", "#E69F00"))
+b16
+
+
+```
+
+
+```{r}
+library(gridExtra)
+grid.arrange(b1,b2,b3,b4, ncol = 2)
+grid.arrange(b5,b6,b7,b8,b9,b10,b11,b12,b13, ncol = 3)
+grid.arrange(b14,b15,b16, ncol = 2)
+
+```
+
+
+```{r}
+boxplot(custc$TotalCharges,data=custc, main="Total Charges")
+boxplot(custc$MonthlyCharges,data=custc, main="Monthly Charges")
+boxplot(custc$tenure,data=custc, main="Tenure")
+
+```
+
+```{r}
+#Plotting Box Plots for Tenure ,Monthly Charges and Total Charges
+b1 <- boxplot(tenure~Churn,data = custc,col = c("#999999","#E69F00"), xlab ="Churn" , ylab = "tenure")
+b2 <- boxplot(MonthlyCharges~Churn,data = custc,col = c("#999999","#E69F00"), xlab ="Churn" , ylab = "MonthlyCharges")
+b3 <- boxplot(TotalCharges~Churn,data = custc,col = c("#999999","#E69F00"), xlab ="Churn" , ylab = "TotalCharges")
+
+```
+
+```{r}
+plot(custc$MonthlyCharges, custc$tenure)
+plot(custc$TotalCharges, custc$tenure)
+
+```
+
+```{r}
+hist(custc$tenure, main="Tenure Distribution",col="sky blue",xlab="Tenure (Months)")
+
+hist(custc$MonthlyCharges, main="Distribution of Monthly Charges",col="grey", xlab="Monthly Charges",xlim=c(0,120),breaks=12)
+
+hist(custc$TotalCharges, main="Distribution of Total Charges",col="pink", xlab="Total Charges")
+
+
+```
+
+```{r}
+#Correlation between numeric variables
+
+library(corrplot)
+
+cor_data <-data.frame(custc$tenure,custc$MonthlyCharges,custc$TotalCharges)
+corr <- cor(cor_data)
+corrplot(corr, method = "number")
+
+```
+
+```{r}
+library(psych)
+pairs.panels(custc[c(3,6,8,14,15,16,17,18,19,20,21)])
+
+```
+
+
+
+
+
