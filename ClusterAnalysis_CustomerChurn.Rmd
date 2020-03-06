@@ -1,0 +1,382 @@
+---
+title: "Cluster Analysis for Customer Churn"
+author: "Valencia Dias"
+date: "05/03/2020"
+output: word_document
+---
+
+```{r}
+library(cluster)
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(Rtsne)
+
+```
+
+```{r}
+custc <- read.csv("C:/Users/admin/Desktop/MVA/PROJECT/TelEco_Customer_Churn.csv")
+dim(custc)
+#structure of dataset
+str(custc)
+
+
+```
+
+```{r}
+sapply(custc, function(x) sum(is.na(x)))
+#
+custc <- custc[complete.cases(custc),]  ## to remove which has null values
+sapply(custc, function(x) sum(is.na(x)))
+dim(custc)
+
+```
+
+```{r}
+# Hirerarchical cluster analysis, Nearest-neighbor
+
+#1:20 rows for clustering
+quant_var_df1<- data.frame(custc$tenure,custc$MonthlyCharges,custc$TotalCharges)
+quant_var_df5 <- quant_var_df1[c(1:20),]
+quant_var_df5
+attach(quant_var_df5)
+# Standardizing the data with scale()
+matstd.custc1<- scale(quant_var_df5[,])
+matstd.custc <- matstd.custc1[c(1:20),]
+matstd.custc
+# Creating a (Euclidean) distance matrix of the standardized data
+dist.custc <- dist(matstd.custc, method="euclidean")
+dist.custc
+
+# Invoking hclust command (cluster analysis by single linkage method)
+cluscustc.nn <- hclust(dist.custc, method = "single")
+cluscustc.nn
+
+#Plotting
+
+# Create extra margin room in the dendrogram, on the bottom (Customer labels)
+par(mar=c(8, 4, 4, 2) + 0.1)
+# Object "cluscustc_var_df.nn" is converted into a object of class "dendrogram"
+# in order to allow better flexibility in the (vertical) dendrogram plotting.
+plot(as.dendrogram(cluscustc.nn),ylab="Distance between customer indexes",ylim=c(0,6),
+     main="Dendrogram for customer values to realise clustering indexes")
+
+dev.new()
+par(mar=c(5, 4, 4, 7) +0.1)
+plot(as.dendrogram(cluscustc.nn), xlab= "Distance between customer indexess", xlim=c(6,0),
+     horiz = TRUE,main="Dendrogram for customer values to realise clustering indexes")
+
+
+
+#??agnes
+(agn.quant_var_df5 <- agnes(quant_var_df5, metric="euclidean", stand=TRUE, method = "single"))
+#View(agn.quant_var_df5)
+
+#  Description of cluster merging
+agn.quant_var_df5$merge
+
+#Dendogram
+plot(as.dendrogram(agn.quant_var_df5), xlab= "Distance between customer indexes",xlim=c(8,0),
+     horiz = TRUE,main="")
+
+#Interactive Plots
+#plot(agn.quant_var_df5,ask=TRUE)
+#plot(agn.quant_var_df5, which.plots=2)
+
+```
+
+```{r}
+#100:120 rows for clustering
+
+quant_var_df1<- data.frame(custc$tenure,custc$MonthlyCharges,custc$TotalCharges)
+quant_var_df6 <- quant_var_df1[c(100:120),]
+quant_var_df6
+attach(quant_var_df6)
+
+matstd.custc1<- scale(quant_var_df6[,])
+matstd.custc <- matstd.custc1[,]
+matstd.custc
+# Creating a (Euclidean) distance matrix of the standardized data
+dist.custc <- dist(matstd.custc, method="euclidean")
+dist.custc
+
+# Invoking hclust command (cluster analysis by single linkage method)
+cluscustc.nn <- hclust(dist.custc, method = "single")
+cluscustc.nn
+
+#Plotting
+
+# Create extra margin room in the dendrogram, on the bottom (Customer labels)
+par(mar=c(8, 4, 4, 2) + 0.1)
+# Object "clusquant_var_df.nn" is converted into a object of class "dendrogram"
+# in order to allow better flexibility in the (vertical) dendrogram plotting.
+plot(as.dendrogram(cluscustc.nn), xlab= "Distance between customer indexes",xlim=c(0,6),
+     horiz = TRUE,main="Dendrogram for customer values to realise clustering indexes")
+
+dev.new()
+par(mar=c(5, 4, 4, 7) +0.1)
+plot(as.dendrogram(cluscustc.nn), xlab= "Distance between customer indexes", xlim=c(6,0),
+     horiz = TRUE,main="Dendrogram for customer values to realise clustering indexes")
+
+#??agnes
+(agn.quant_var_df6 <- agnes(quant_var_df6, metric="euclidean", stand=TRUE, method = "single"))
+#View(agn.quant_var_df6)
+
+#  Description of cluster merging
+agn.quant_var_df6$merge
+
+#Dendogram
+plot(as.dendrogram(agn.quant_var_df6), xlab= "Distance between customer indexes",xlim=c(8,0),
+     horiz = TRUE,main="Dendrogram for customer values to realise clustering indexes")
+
+#Interactive Plots
+#plot(agn.quant_var_df6,ask=TRUE)
+#plot(agn.quant_var_df6, which.plots=2)
+```
+
+```{r}
+#1000:1020 rows for sampling
+
+quant_var_df1<- data.frame(custc$tenure,custc$MonthlyCharges,custc$TotalCharges)
+quant_var_df7 <- quant_var_df1[c(1000:1020),]
+quant_var_df7
+attach(quant_var_df7)
+
+matstd.custc1<- scale(quant_var_df7[,])
+matstd.custc <- matstd.custc1[,]
+matstd.custc
+# Creating a (Euclidean) distance matrix of the standardized data
+dist.custc <- dist(matstd.custc, method="euclidean")
+dist.custc
+
+# Invoking hclust command (cluster analysis by single linkage method)
+cluscustc.nn <- hclust(dist.custc, method = "single")
+cluscustc.nn
+
+#Plotting
+
+# Create extra margin room in the dendrogram, on the bottom (Countries labels)
+par(mar=c(8, 4, 4, 2) + 0.1)
+# Object "cluscustc_var_df.nn" is converted into a object of class "dendrogram"
+# in order to allow better flexibility in the (vertical) dendrogram plotting.
+plot(as.dendrogram(cluscustc.nn),ylab="Distance between customer indexes",ylim=c(0,6),
+     main="Dendrogram. ")
+
+dev.new()
+par(mar=c(5, 4, 4, 7) +0.1)
+plot(as.dendrogram(cluscustc.nn), xlab= "Distance between customer indexes", xlim=c(6,0),
+     horiz = TRUE,main="Dendrogram for customer values to realise clustering indexes")
+
+
+
+#??agnes
+(agn.quant_var_df7 <- agnes(quant_var_df7, metric="euclidean", stand=TRUE, method = "single"))
+#View(agn.quant_var_df7)
+
+#  Description of cluster merging
+agn.quant_var_df7$merge
+
+#Dendogram
+plot(as.dendrogram(agn.quant_var_df7), xlab= "Distance between customer indexes",xlim=c(8,0),
+     horiz = TRUE,main="Dendrogram for customer values to realise clustering indexes
+     .0")
+
+#Interactive Plots
+#plot(agn.quant_var_df7,ask=TRUE)
+#plot(agn.quant_var_df7, which.plots=2)
+
+
+```
+
+
+```{r}
+#6000:6020 rows for clustering
+
+quant_var_df1<- data.frame(custc$tenure,custc$MonthlyCharges,custc$TotalCharges)
+quant_var_df8 <- quant_var_df1[c(6000:6020),]
+quant_var_df8
+attach(quant_var_df8)
+
+matstd.custc1<- scale(quant_var_df8[,])
+matstd.custc <- matstd.custc1[,]
+matstd.custc
+# Creating a (Euclidean) distance matrix of the standardized data
+dist.custc <- dist(matstd.custc, method="euclidean")
+dist.custc
+
+# Invoking hclust command (cluster analysis by single linkage method)
+cluscustc.nn <- hclust(dist.custc, method = "single")
+cluscustc.nn
+
+#Plotting
+
+# Create extra margin room in the dendrogram, on the bottom (Countries labels)
+par(mar=c(8, 4, 4, 2) + 0.1)
+# Object "clusquant_var_df.nn" is converted into a object of class "dendrogram"
+# in order to allow better flexibility in the (vertical) dendrogram plotting.
+plot(as.dendrogram(cluscustc.nn),ylab="Distance between customer indexes",ylim=c(0,6),
+     main="Dendrogram for customer values to realise clustering indexes")
+
+dev.new()
+par(mar=c(5, 4, 4, 7) +0.1)
+plot(as.dendrogram(cluscustc.nn), xlab= "Distance between customer indexes", xlim=c(6,0),
+     horiz = TRUE,main="Dendrogram for customer values to realise clustering indexes")
+
+
+#??agnes
+(agn.quant_var_df8 <- agnes(quant_var_df8, metric="euclidean", stand=TRUE, method = "single"))
+#View(agn.quant_var_df8)
+
+#  Description of cluster merging
+agn.quant_var_df8$merge
+
+#Dendogram
+plot(as.dendrogram(agn.quant_var_df8), xlab= "Distance between Customer indexes",xlim=c(4,0),
+     horiz = TRUE,main="Dendrogram for customer values to realise clustering indexes")
+
+#Interactive Plots
+#plot(agn.quant_var_df8,ask=TRUE)
+#plot(agn.quant_var_df8, which.plots=2)
+
+```
+
+
+```{r}
+#K-Means Clustering
+#Sample 1
+quant_var_df1<- data.frame(custc$tenure,custc$MonthlyCharges,custc$TotalCharges)
+quant_var_df5 <- quant_var_df1[c(1:20),]
+quant_var_df5
+
+attach(quant_var_df5)
+# Standardizing the data with scale()
+quant_var_df5[,]
+matstd.quant_var_df5 <- scale(quant_var_df5[,])
+
+# K-means, k=2, 3, 4, 5, 6
+# Centers (k's) are numbers thus, 10 random sets are chosen
+
+(kmeans2.quant_var_df5 <- kmeans(matstd.quant_var_df5,2,nstart = 10))
+# Computing the percentage of variation accounted for. Two clusters
+perc.var.2 <- round(100*(1 - kmeans2.quant_var_df5$betweenss/kmeans2.quant_var_df5$totss),1)
+names(perc.var.2) <- "Perc. 2 clus"
+perc.var.2
+
+# Computing the percentage of variation accounted for. Three clusters
+(kmeans3.quant_var_df5 <- kmeans(matstd.quant_var_df5,3,nstart = 10))
+perc.var.3 <- round(100*(1 - kmeans3.quant_var_df5$betweenss/kmeans3.quant_var_df5$totss),1)
+names(perc.var.3) <- "Perc. 3 clus"
+perc.var.3
+
+# Computing the percentage of variation accounted for. Four clusters
+(kmeans4.quant_var_df5 <- kmeans(matstd.quant_var_df5,4,nstart = 10))
+perc.var.4 <- round(100*(1 - kmeans4.quant_var_df5$betweenss/kmeans4.quant_var_df5$totss),1)
+names(perc.var.4) <- "Perc. 4 clus"
+perc.var.4
+
+# Computing the percentage of variation accounted for. Five clusters
+(kmeans5.quant_var_df5 <- kmeans(matstd.quant_var_df5,5,nstart = 10))
+perc.var.5 <- round(100*(1 - kmeans5.quant_var_df5$betweenss/kmeans5.quant_var_df5$totss),1)
+names(perc.var.5) <- "Perc. 5 clus"
+perc.var.5
+(kmeans6.quant_var_df5 <- kmeans(matstd.quant_var_df5,6,nstart = 10))
+
+# Computing the percentage of variation accounted for. Six clusters
+perc.var.6 <- round(100*(1 - kmeans6.quant_var_df5$betweenss/kmeans6.quant_var_df5$totss),1)
+names(perc.var.6) <- "Perc. 6 clus"
+perc.var.6
+#
+kmeans4.quant_var_df5$cluster == 1
+# Saving four k-means clusters in a list
+clus1 <- matrix(names(kmeans4.quant_var_df5$cluster[kmeans4.quant_var_df5$cluster == 1]), 
+                ncol=1, nrow=length(kmeans4.quant_var_df5$cluster[kmeans4.quant_var_df5$cluster == 1]))
+colnames(clus1) <- "Cluster 1"
+clus2 <- matrix(names(kmeans4.quant_var_df5$cluster[kmeans4.quant_var_df5$cluster == 2]), 
+                ncol=1, nrow=length(kmeans4.quant_var_df5$cluster[kmeans4.quant_var_df5$cluster == 2]))
+colnames(clus2) <- "Cluster 2"
+clus3 <- matrix(names(kmeans4.quant_var_df5$cluster[kmeans4.quant_var_df5$cluster == 3]), 
+                ncol=1, nrow=length(kmeans4.quant_var_df5$cluster[kmeans4.quant_var_df5$cluster == 3]))
+colnames(clus3) <- "Cluster 3"
+clus4 <- matrix(names(kmeans4.quant_var_df5$cluster[kmeans4.quant_var_df5$cluster == 4]), 
+                ncol=1, nrow=length(kmeans4.quant_var_df5$cluster[kmeans4.quant_var_df5$cluster == 4]))
+colnames(clus4) <- "Cluster 4"
+list(clus1,clus2,clus3,clus4)
+
+library(factoextra)
+fviz_cluster(kmeans4.quant_var_df5, quant_var_df5[,], ellipse.type = "norm")
+
+
+
+```
+
+
+```{r}
+#Sample 2
+quant_var_df1<- data.frame(custc$tenure,custc$MonthlyCharges,custc$TotalCharges)
+quant_var_df6 <- quant_var_df1[c(100:120),]
+quant_var_df6
+attach(quant_var_df6)
+# Standardizing the data with scale()
+quant_var_df6[,]
+matstd.quant_var_df6 <- scale(quant_var_df6[,])
+(kmeans2.quant_var_df6 <- kmeans(matstd.quant_var_df6,2,nstart = 10))
+# Computing the percentage of variation accounted for. Two clusters
+perc.var.2 <- round(100*(1 - kmeans2.quant_var_df6$betweenss/kmeans2.quant_var_df6$totss),1)
+names(perc.var.2) <- "Perc. 2 clus"
+perc.var.2
+
+# Computing the percentage of variation accounted for. Three clusters
+(kmeans3.quant_var_df6 <- kmeans(matstd.quant_var_df6,3,nstart = 10))
+perc.var.3 <- round(100*(1 - kmeans3.quant_var_df6$betweenss/kmeans3.quant_var_df6$totss),1)
+names(perc.var.3) <- "Perc. 3 clus"
+perc.var.3
+
+# Computing the percentage of variation accounted for. Four clusters
+(kmeans4.quant_var_df6 <- kmeans(matstd.quant_var_df6,4,nstart = 10))
+perc.var.4 <- round(100*(1 - kmeans4.quant_var_df6$betweenss/kmeans4.quant_var_df6$totss),1)
+names(perc.var.4) <- "Perc. 4 clus"
+perc.var.4
+
+# Computing the percentage of variation accounted for. Five clusters
+(kmeans5.quant_var_df6 <- kmeans(matstd.quant_var_df6,5,nstart = 10))
+perc.var.5 <- round(100*(1 - kmeans5.quant_var_df6$betweenss/kmeans5.quant_var_df6$totss),1)
+names(perc.var.5) <- "Perc. 5 clus"
+perc.var.5
+(kmeans6.quant_var_df6 <- kmeans(matstd.quant_var_df6,6,nstart = 10))
+
+# Computing the percentage of variation accounted for. Six clusters
+perc.var.6 <- round(100*(1 - kmeans6.quant_var_df6$betweenss/kmeans6.quant_var_df6$totss),1)
+names(perc.var.6) <- "Perc. 6 clus"
+perc.var.6
+
+
+#
+kmeans5.quant_var_df6$cluster == 1
+# Saving five k-means clusters in a list
+clus1 <- matrix(names(kmeans5.quant_var_df6$cluster[kmeans5.quant_var_df6$cluster == 1]), 
+                ncol=1, nrow=length(kmeans5.quant_var_df6$cluster[kmeans5.quant_var_df6$cluster == 1]))
+colnames(clus1) <- "Cluster 1"
+clus2 <- matrix(names(kmeans5.quant_var_df6$cluster[kmeans5.quant_var_df6$cluster == 2]), 
+                ncol=1, nrow=length(kmeans5.quant_var_df6$cluster[kmeans5.quant_var_df6$cluster == 2]))
+colnames(clus2) <- "Cluster 2"
+clus3 <- matrix(names(kmeans5.quant_var_df6$cluster[kmeans5.quant_var_df6$cluster == 3]), 
+                ncol=1, nrow=length(kmeans5.quant_var_df6$cluster[kmeans5.quant_var_df6$cluster == 3]))
+colnames(clus3) <- "Cluster 3"
+clus4 <- matrix(names(kmeans5.quant_var_df6$cluster[kmeans5.quant_var_df6$cluster == 4]), 
+                ncol=1, nrow=length(kmeans5.quant_var_df6$cluster[kmeans5.quant_var_df6$cluster == 4]))
+colnames(clus4) <- "Cluster 4"
+clus5 <- matrix(names(kmeans5.quant_var_df6$cluster[kmeans5.quant_var_df6$cluster == 5]), 
+                ncol=1, nrow=length(kmeans5.quant_var_df6$cluster[kmeans5.quant_var_df6$cluster == 5]))
+colnames(clus4) <- "Cluster 5"
+list(clus1,clus2,clus3,clus4,clus5)
+
+library(factoextra)
+fviz_cluster(kmeans5.quant_var_df6, quant_var_df6[,], geom="text")
+
+
+
+```
+
+
+
+
